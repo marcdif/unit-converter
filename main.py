@@ -1,34 +1,37 @@
+from enum import StrEnum, auto
 import sys
 
-def normalize_unit(input: str) -> str:
+class TemperatureUnit(StrEnum):
+    CELSIUS = auto()
+    FAHRENHEIT = auto()
+    KELVIN = auto()
+
+def normalize_unit(input: str) -> TemperatureUnit:
     if input == "c":
         input = "celsius"
     elif input == "f":
         input = "fahrenheit"
     elif input == "k":
         input = "kelvin"
-    return input
+    return TemperatureUnit[input.upper()]
 
-def convert_temperature(value: float, input_unit: str, output_unit: str) -> float:
-    input_unit = input_unit.lower()
-    output_unit = output_unit.lower()
-    
+def convert_temperature(value: float, input_unit: TemperatureUnit, output_unit: TemperatureUnit) -> float:
     # Convert to celsius as base unit
-    if input_unit == "celsius":
+    if input_unit == TemperatureUnit.CELSIUS:
         celsius = value
-    elif input_unit == "fahrenheit":
+    elif input_unit == TemperatureUnit.FAHRENHEIT:
         celsius = ((value - 32) * 5) / 9
-    elif input_unit == "kelvin":
+    elif input_unit == TemperatureUnit.KELVIN:
         celsius = value - 273.15
     else:
         raise ValueError(f"Unsupported input unit: {input_unit}")
     
     # Convert celsius to output unit
-    if output_unit == "celsius":
+    if output_unit == TemperatureUnit.CELSIUS:
         return celsius
-    elif output_unit == "fahrenheit":
+    elif output_unit == TemperatureUnit.FAHRENHEIT:
         return ((celsius * 9) / 5) + 32
-    elif output_unit == "kelvin":
+    elif output_unit == TemperatureUnit.KELVIN:
         return celsius + 273.15
     else:
         raise ValueError(f"Unsupported output unit: {output_unit}")
