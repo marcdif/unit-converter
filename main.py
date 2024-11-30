@@ -1,6 +1,13 @@
 from enum import StrEnum, auto
 import sys
 
+class UnitType(StrEnum):
+    TEMPERATURE = auto()
+    LENGTH = auto()
+    TIME = auto()
+    WEIGHT = auto()
+    SPEED = auto()
+
 class TemperatureUnit(StrEnum):
     CELSIUS = auto()
     FAHRENHEIT = auto()
