@@ -1,5 +1,6 @@
 from enum import StrEnum, auto
 
+
 class UnitType(StrEnum):
     TEMPERATURE = auto()
     LENGTH = auto()
@@ -12,7 +13,7 @@ class Unit(StrEnum):
         raise NotImplementedError("Subclass must implement this method")
     
     def format(self, value) -> str:
-        return value
+        return self
 
 class TemperatureUnit(Unit):
     CELSIUS = auto()
@@ -46,5 +47,32 @@ class TimeUnit(Unit):
                 return "centuries"
             elif self == TimeUnit.MILLENNIUM:
                 return "millennia"
+            else:
+                return f"{self}s"
+
+class LengthUnit(Unit):
+    # Imperial
+    INCH = auto()
+    FOOT = auto()
+    YARD = auto()
+    MILE = auto()
+
+    # Metric
+    MILLIMETER = auto()
+    CENTIMETER = auto()
+    METER = auto()
+    KILOMETER = auto()
+
+    def get_type(self) -> UnitType:
+        return UnitType.LENGTH
+    
+    def format(self, value) -> str:
+        if value == 1:
+            return self;
+        else:
+            if self == LengthUnit.INCH:
+                return "inches"
+            elif self == LengthUnit.FOOT:
+                return "feet"
             else:
                 return f"{self}s"

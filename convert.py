@@ -1,4 +1,5 @@
-from units import Unit, UnitType, TemperatureUnit, TimeUnit
+from units import LengthUnit, TemperatureUnit, TimeUnit, Unit, UnitType
+
 
 def convert_temperature(value: float, input_unit: TemperatureUnit, output_unit: TemperatureUnit) -> float:
     # Convert to celsius as base unit
@@ -49,6 +50,7 @@ def convert_time(value: float, input_unit: TimeUnit, output_unit: TimeUnit) -> f
         case _:
             raise ValueError(f"Unsupported input unit: {input_unit}")
         
+    # Convert milliseconds to output unit
     match output_unit:
         case TimeUnit.MILLISECOND:
             return milliseconds
@@ -75,10 +77,55 @@ def convert_time(value: float, input_unit: TimeUnit, output_unit: TimeUnit) -> f
         case _:
             raise ValueError(f"Unsupported output unit: {input_unit}")
 
+def convert_length(value: float, input_unit: LengthUnit, output_unit: LengthUnit) -> float:
+    # Convert to millimeters as base unit
+    match input_unit:
+        case LengthUnit.INCH:
+            millimeters = value * 25.4
+        case LengthUnit.FOOT:
+            millimeters = value * 25.4 * 12
+        case LengthUnit.YARD:
+            millimeters = value * 25.4 * 12 * 3
+        case LengthUnit.MILE:
+            millimeters = value * 25.4 * 12 * 5280
+        case LengthUnit.MILLIMETER:
+            millimeters = value
+        case LengthUnit.CENTIMETER:
+            millimeters = value * 10
+        case LengthUnit.METER:
+            millimeters = value * 1000
+        case LengthUnit.KILOMETER:
+            millimeters = value * 1000 * 1000
+        case _:
+            raise ValueError(f"Unsupported input unit: {input_unit}")
+
+    # Convert millimeters to output unit
+    match output_unit:
+        case LengthUnit.INCH:
+            return millimeters / 25.4
+        case LengthUnit.FOOT:
+            return millimeters / 25.4 / 12
+        case LengthUnit.YARD:
+            return millimeters / 25.4 / 12 / 3
+        case LengthUnit.MILE:
+            return millimeters / 25.4 / 12 / 5280
+        case LengthUnit.MILLIMETER:
+            return millimeters
+        case LengthUnit.CENTIMETER:
+            return millimeters / 10
+        case LengthUnit.METER:
+            return millimeters / 1000
+        case LengthUnit.KILOMETER:
+            return millimeters / 1000 / 1000
+        case _:
+            raise ValueError(f"Unsupported output unit: {input_unit}")
+
 def convert(value: float, input_unit: Unit, output_unit: Unit) -> float:
     match input_unit.get_type():
         case UnitType.TEMPERATURE:
             return convert_temperature(value, input_unit, output_unit)
         case UnitType.TIME:
             return convert_time(value, input_unit, output_unit)
+        case UnitType.LENGTH:
+            return convert_length(value, input_unit, output_unit)
     raise ValueError(f"Unsupported unit: {input_unit}")

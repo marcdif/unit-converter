@@ -1,6 +1,7 @@
-from units import TemperatureUnit, TimeUnit, Unit
+from units import LengthUnit, TemperatureUnit, TimeUnit, Unit
 
-def sigfig(value: float, precision: float = 2) -> str:
+
+def sigfig(value: float, decimal_precision: float = 2) -> str:
     if value == 0:
         return "0"
 
@@ -10,7 +11,9 @@ def sigfig(value: float, precision: float = 2) -> str:
     
     if "e" in f"{value}":
         exponent = int(f"{value}".split("e-")[1])
-        sigfigs = f"{value}"[:4].replace(".", "")
+        sigfigs = f"{value}"[:(decimal_precision + 1)].replace(".", "")
+        if "e-" in sigfigs:
+            sigfigs = f"{sigfigs}".split("e-")[0]
         string = "0."
         for i in range(1, exponent):
             string = f"{string}0"
@@ -35,9 +38,9 @@ def sigfig(value: float, precision: float = 2) -> str:
             if digit == "0":
                 continue
             if digit != "0":
-                last = precision
+                last = decimal_precision
         num = float(f"{integer_part}.{truncated_decimal.rstrip('0')}")
-        if len(truncated_decimal) > precision:
+        if len(truncated_decimal) > decimal_precision:
             num = round(num, len(truncated_decimal) - 1)
         return num
     return formatted
@@ -73,4 +76,21 @@ def normalize_unit(input: str) -> Unit:
         return TimeUnit.CENTURY
     elif input == "millennium" or input == "millennia":
         return TimeUnit.MILLENNIUM
+    # Length units
+    elif input == "in" or input == "inch" or input == "inches":
+        return LengthUnit.INCH
+    elif input == "ft" or input == "foot" or input == "feet":
+        return LengthUnit.FOOT
+    elif input == "yd" or input == "yard" or input == "yards":
+        return LengthUnit.YARD
+    elif input == "mi" or input == "mile" or input == "miles":
+        return LengthUnit.MILE
+    elif input == "mm" or input == "millimeter" or input == "millimeters":
+        return LengthUnit.MILLIMETER
+    elif input == "cm" or input == "centimeter" or input == "centimeters":
+        return LengthUnit.CENTIMETER
+    elif input == "meter" or input == "meters":
+        return LengthUnit.METER
+    elif input == "km" or input == "kilometer" or input == "kilometers":
+        return LengthUnit.KILOMETER
     raise ValueError(f"Unsupported unit: {input}")
